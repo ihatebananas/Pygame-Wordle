@@ -12,12 +12,14 @@ def findMatches(word, anotherWord, currentIndex):
             matches += 1
     return matches
 
-def findColored(word, anotherWord, currentIndex, letter):
+def findColored(word, anotherWord, currentIndex, letter, maxIndex):
+    if maxIndex == 0:
+        return 0
     letterCount = word.count(letter)
     if not letter.__eq__(anotherWord[currentIndex]) :
         if currentIndex == 0:
             return 0
-        return findColored(word,anotherWord,currentIndex-1,letter)
+        return findColored(word,anotherWord,currentIndex-1,letter,maxIndex)
     if currentIndex == 0:
         if word[0] == anotherWord[0]:
             return 1
@@ -30,7 +32,7 @@ def findColored(word, anotherWord, currentIndex, letter):
         for m in range(currentIndex):
             if anotherWord[m] == anotherWord[currentIndex] and anotherWord[m] == word[m]:
                 count += 1
-            elif anotherWord[m] == anotherWord[currentIndex] and findColored(word,anotherWord,currentIndex-1,letter) + findMatches(word,anotherWord,currentIndex) < letterCount:
+            elif anotherWord[m] == anotherWord[currentIndex] and findColored(word,anotherWord,currentIndex-1,letter,maxIndex) + findMatches(word,anotherWord,currentIndex) < letterCount:
                 count += 1
     return count
 
@@ -78,7 +80,7 @@ def draw_board():
                 for j in range(5):
                     guessed += board[row][j]
                 numLetters = word.count(board[row][col])
-                numColored = findColored(word,guessed,col,guessed[col])
+                numColored = findColored(word,guessed,col,guessed[col],col)
                 numMatches = findMatches(word,guessed,col)
                 if board[row][col] == word[col]:
                     pygame.draw.rect(screen, green, [col * 100 + 12, row * 100 + 12, 75, 75], 0, 5)
